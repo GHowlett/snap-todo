@@ -6,6 +6,8 @@ var csso = require('gulp-csso');
 var browserSync = require('browser-sync').create();
 var cache = require('gulp-cached');
 var nodemon = require('gulp-nodemon');
+var prefixer = require('gulp-autoprefixer');
+var sourcemap = require('gulp-sourcemaps');
 
 var src_path = "src/";
 var build_path = "www/";
@@ -21,9 +23,8 @@ gulp.task('lint', function(){
 gulp.task('copy', function(){
 	return gulp.src([
 		src_path + '**/*.html',
-		src_path + '**/*.css',
 		src_path + '**/*.js'])
-		.pipe(cache('vanilla')) // filters out unchanged files
+		.pipe(cache()) // filters out unchanged files
 		.pipe(gulp.dest(build_path))
 		.pipe(browserSync.stream())
 	;
@@ -43,10 +44,21 @@ gulp.task('csso', function(){
 	;
 });
 
+gulp.task('prefix', function(){
+	return gulp.src(src_path + '**/*.css')
+		.pipe(cache()) // filters out unchanged files
+		.pipe(sourcemap.init())
+		.pipe(prefixer())
+		.pipe(sourcemap.write())
+		.pipe(gulp.dest(build_path))
+		.pipe(browserSync.stream())
+	;
+});
+
 // auto-reloads frontend files
 gulp.task('watch', ['nodemon'], function(){
 	// TODO: only watch vanilla files for copy task
-	gulp.watch([src_path + '**/*'], ['copy']);
+	gulp.watch([src_path + '**/*'], ['copy', 'prefix']);
 
 	browserSync.init({
         proxy: 'http://localhost:3000', 
@@ -60,6 +72,6 @@ gulp.task('nodemon', function(){
 	return nodemon({script:'server.js'});
 });
 
-gulp.task('dev', ['lint', 'copy', 'watch']);
-gulp.task('prod', ['lint', 'copy', 'uglify', 'csso']);
+gulp.task('dev', ['lint', 'copy', 'prefix', 'watch']);
+gulp.task('prod', ['lint', 'copy', 'prefix', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
