@@ -72,9 +72,9 @@ gulp.task('watch', function(){
         proxy: 'http://localhost:3000', 
         open: false,
         port: 5000
-    }, function(){
-		gulp.watch([src_path + '**/*'], ['build']);
     });
+
+    gulp.watch([src_path + '**/*'], ['build']);
 });
 
 gulp.task('build', ['lint', 'copy', 'prefix', 'browserify'])
