@@ -65,7 +65,11 @@ gulp.task('browserify', function(){
 
 gulp.task('watch', function(){
 	// auto-reloads server files
-	nodemon({script:'server.js', watch:['server.js']});
+	nodemon({
+		script:'server.js', 
+		watch:['server.js'],
+		env: {'PORT': '3000'}
+	});
 
 	// auto-reloads frontend files
 	browserSync.init({
@@ -77,7 +81,7 @@ gulp.task('watch', function(){
     gulp.watch([src_path + '**/*'], ['build']);
 });
 
-gulp.task('build', ['lint', 'copy', 'prefix', 'browserify'])
+gulp.task('build', ['lint', 'copy', 'prefix', 'browserify']);
 gulp.task('dev', ['build', 'watch']);
 gulp.task('prod', ['build', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
