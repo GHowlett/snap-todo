@@ -8,6 +8,10 @@ var cache = require('gulp-cached');
 var nodemon = require('gulp-nodemon');
 var prefixer = require('gulp-autoprefixer');
 var sourcemap = require('gulp-sourcemaps');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var browserify = require('browserify');
+var watchify = require('watchify');
 
 var src_path = "src/";
 var build_path = "www/";
@@ -21,9 +25,7 @@ gulp.task('lint', function(){
 
 // copies vanilla files
 gulp.task('copy', function(){
-	return gulp.src([
-		src_path + '**/*.html',
-		src_path + '**/*.js'])
+	return gulp.src(src_path + '**/*.html')
 		.pipe(cache()) // filters out unchanged files
 		.pipe(gulp.dest(build_path))
 		.pipe(browserSync.stream())
@@ -55,13 +57,23 @@ gulp.task('prefix', function(){
 	;
 });
 
-gulp.task('browserify', function(){
-	return browserify(src_path + 'js/script.js').bundle()
-		.pipe(source('script.js')) // transforms to a vinyl stream (what gulp expects)
-		.pipe(gulp.dest(build_path))
-	;
+var bundler = browserify({
+	entries: src_path + 'js/script.js',
+	debug: true, // generates sourcemaps
+	cache: {}, // watchify arg
+	packageCache: {} // watchify arg
 });
 
+gulp.task('bundle', function(){
+	return bundler.bundle()
+		.pipe(source('js/script.js')) // transforms to a vinyl stream (what gulp expects)
+		.pipe(buffer()) // transforms to a vinyl buffer (what sourcemap expects)
+		.pipe(sourcemap.init({loadMaps:true}))
+		.pipe(sourcemap.write())
+		.pipe(gulp.dest(build_path))
+		.pipe(browserSync.stream())
+	;
+});
 
 gulp.task('watch', function(){
 	// auto-reloads server files
@@ -78,10 +90,13 @@ gulp.task('watch', function(){
         port: 5000
     });
 
+	// incrementally rebuilds bundle
+    bundler = watchify(bundler);
+
     gulp.watch([src_path + '**/*'], ['build']);
 });
 
-gulp.task('build', ['lint', 'copy', 'prefix', 'browserify']);
+gulp.task('build', ['lint', 'copy', 'prefix', 'bundle']);
 gulp.task('dev', ['build', 'watch']);
 gulp.task('prod', ['build', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
