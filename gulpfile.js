@@ -55,23 +55,29 @@ gulp.task('prefix', function(){
 	;
 });
 
-// auto-reloads frontend files
-gulp.task('watch', ['nodemon'], function(){
-	// TODO: only watch vanilla files for copy task
-	gulp.watch([src_path + '**/*'], ['copy', 'prefix']);
+gulp.task('browserify', function(){
+	return browserify(src_path + 'js/script.js').bundle()
+		.pipe(source('script.js')) // transforms to a vinyl stream (what gulp expects)
+		.pipe(gulp.dest(build_path))
+	;
+});
 
+
+gulp.task('watch', function(){
+	// auto-reloads server files
+	nodemon({script:'server.js', watch:['server.js']});
+
+	// auto-reloads frontend files
 	browserSync.init({
         proxy: 'http://localhost:3000', 
         open: false,
         port: 5000
+    }, function(){
+		gulp.watch([src_path + '**/*'], ['build']);
     });
 });
 
-// auto-reloads server files
-gulp.task('nodemon', function(){
-	return nodemon({script:'server.js'});
-});
-
-gulp.task('dev', ['lint', 'copy', 'prefix', 'watch']);
-gulp.task('prod', ['lint', 'copy', 'prefix', 'csso', 'uglify']);
+gulp.task('build', ['lint', 'copy', 'prefix', 'browserify'])
+gulp.task('dev', ['build', 'watch']);
+gulp.task('prod', ['build', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
