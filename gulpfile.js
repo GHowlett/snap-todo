@@ -28,7 +28,6 @@ gulp.task('copy', function(){
 	return gulp.src(src_path + '**/*.html')
 		.pipe(cache()) // filters out unchanged files
 		.pipe(gulp.dest(build_path))
-		.pipe(browserSync.stream())
 	;
 });
 
@@ -53,7 +52,6 @@ gulp.task('prefix', function(){
 		.pipe(prefixer())
 		.pipe(sourcemap.write())
 		.pipe(gulp.dest(build_path))
-		.pipe(browserSync.stream())
 	;
 });
 
@@ -71,7 +69,6 @@ gulp.task('bundle', function(){
 		.pipe(sourcemap.init({loadMaps:true}))
 		.pipe(sourcemap.write())
 		.pipe(gulp.dest(build_path))
-		.pipe(browserSync.stream())
 	;
 });
 
@@ -86,16 +83,25 @@ gulp.task('watch', function(){
 	// auto-reloads frontend files
 	browserSync.init({
         proxy: 'http://localhost:3000', 
+        // server: 'www',
         open: false,
         port: 5000
     });
 
 	// incrementally rebuilds bundle
-    bundler = watchify(bundler);
+    bundler = watchify(bundler, {poll:true}); // poll required for OSX (https://github.com/substack/watchify#rebuilds-on-os-x-never-trigger)
 
     gulp.watch([src_path + 'js/**/*.js'], ['lint','bundle']);
     gulp.watch([src_path + 'css/**/*.css'], ['prefix']);
     gulp.watch([src_path + '**/*.html'], ['copy']);
+
+    gulp.watch([build_path + '**/*'], function(){
+    	gulp.src(build_path + '**/*.*')
+    		.pipe(cache())
+    		.pipe(browserSync.stream())
+    });
+
+
 });
 
 gulp.task('build', ['lint', 'copy', 'prefix', 'bundle']);
