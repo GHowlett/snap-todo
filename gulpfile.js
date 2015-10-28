@@ -93,7 +93,9 @@ gulp.task('watch', function(){
 	// incrementally rebuilds bundle
     bundler = watchify(bundler);
 
-    gulp.watch([src_path + '**/*'], ['build']);
+    gulp.watch([src_path + 'js/**/*.js'], ['lint','bundle']);
+    gulp.watch([src_path + 'css/**/*.css'], ['prefix']);
+    gulp.watch([src_path + '**/*.html'], ['copy']);
 });
 
 gulp.task('build', ['lint', 'copy', 'prefix', 'bundle']);
