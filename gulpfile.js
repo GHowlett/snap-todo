@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var csso = require('gulp-csso');
@@ -12,6 +11,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var browserify = require('browserify');
 var watchify = require('watchify');
+var jade = require('gulp-jade');
 
 var src_path = "src/";
 var build_path = "www/";
@@ -27,6 +27,14 @@ gulp.task('lint', function(){
 gulp.task('copy', function(){
 	return gulp.src(src_path + '**/*.html')
 		.pipe(cache()) // filters out unchanged files
+		.pipe(gulp.dest(build_path))
+	;
+});
+
+gulp.task('templates', function(){
+	return gulp.src(src_path + '**/*.jade')
+		.pipe(cache())
+		.pipe(jade())
 		.pipe(gulp.dest(build_path))
 	;
 });
@@ -82,8 +90,7 @@ gulp.task('watch', function(){
 
 	// auto-reloads frontend files
 	browserSync.init({
-        proxy: 'http://localhost:3000', 
-        // server: 'www',
+        proxy: 'http://localhost:3000',
         open: false,
         port: 5000
     });
@@ -94,6 +101,7 @@ gulp.task('watch', function(){
     gulp.watch([src_path + 'js/**/*.js'], ['lint','bundle']);
     gulp.watch([src_path + 'css/**/*.css'], ['prefix']);
     gulp.watch([src_path + '**/*.html'], ['copy']);
+    gulp.watch([src_path + '**/*.jade'], ['templates']);
 
     gulp.watch([build_path + '**/*'], function(){
     	gulp.src(build_path + '**/*.*')
@@ -104,7 +112,7 @@ gulp.task('watch', function(){
 
 });
 
-gulp.task('build', ['lint', 'copy', 'prefix', 'bundle']);
+gulp.task('build', ['lint', 'copy', 'templates', 'prefix', 'bundle']);
 gulp.task('dev', ['build', 'watch']);
 gulp.task('prod', ['build', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
