@@ -12,6 +12,7 @@ var buffer = require('vinyl-buffer');
 var browserify = require('browserify');
 var watchify = require('watchify');
 var jade = require('gulp-jade');
+var stylus = require('gulp-stylus');
 
 var srcPath = "src/";
 var buildPath = "www/";
@@ -24,14 +25,14 @@ gulp.task('lint', function(){
 });
 
 // copies vanilla files
-gulp.task('copy', function(){
+gulp.task('html', function(){
 	return gulp.src(srcPath + '**/*.html')
 		.pipe(cache()) // filters out unchanged files
 		.pipe(gulp.dest(buildPath))
 	;
 });
 
-gulp.task('templates', function(){
+gulp.task('jade', function(){
 	return gulp.src(srcPath + '**/*.jade')
 		.pipe(cache())
 		.pipe(jade())
@@ -53,10 +54,21 @@ gulp.task('csso', function(){
 	;
 });
 
-gulp.task('prefix', function(){
+gulp.task('css', function(){
 	return gulp.src(srcPath + '**/*.css')
 		.pipe(cache()) // filters out unchanged files
 		.pipe(sourcemap.init())
+		.pipe(prefixer())
+		.pipe(sourcemap.write())
+		.pipe(gulp.dest(buildPath))
+	;
+});
+
+gulp.task('stylus', function(){
+	return gulp.src(srcPath + '**/*.styl')
+		.pipe(cache()) // filters out unchanged files
+		.pipe(sourcemap.init())
+		.pipe(stylus())
 		.pipe(prefixer())
 		.pipe(sourcemap.write())
 		.pipe(gulp.dest(buildPath))
@@ -70,7 +82,7 @@ var bundler = browserify({
 	packageCache: {} // watchify arg
 });
 
-gulp.task('bundle', function(){
+gulp.task('js', function(){
 	return bundler.bundle()
 		.pipe(source('js/script.js')) // transforms to a vinyl stream (what gulp expects)
 		.pipe(buffer()) // transforms to a vinyl buffer (what sourcemap expects)
@@ -98,21 +110,20 @@ gulp.task('watch', function(){
 	// incrementally rebuilds bundle
     bundler = watchify(bundler, {poll:true}); // poll required for OSX (https://github.com/substack/watchify#rebuilds-on-os-x-never-trigger)
 
-    gulp.watch([srcPath + 'js/**/*.js'], ['lint','bundle']);
-    gulp.watch([srcPath + 'css/**/*.css'], ['prefix']);
-    gulp.watch([srcPath + '**/*.html'], ['copy']);
-    gulp.watch([srcPath + '**/*.jade'], ['templates']);
+    gulp.watch([srcPath + 'js/**/*.js'], ['lint','js']);
+    gulp.watch([srcPath + 'css/**/*.styl'], ['stylus']);
+    gulp.watch([srcPath + 'css/**/*.css'], ['css']);
+    gulp.watch([srcPath + '**/*.html'], ['html']);
+    gulp.watch([srcPath + '**/*.jade'], ['jade']);
 
     gulp.watch([buildPath + '**/*'], function(){
     	gulp.src(buildPath + '**/*.*')
     		.pipe(cache())
     		.pipe(browserSync.stream())
     });
-
-
 });
 
-gulp.task('build', ['lint', 'copy', 'templates', 'prefix', 'bundle']);
+gulp.task('build', ['lint', 'html', 'jade', 'css', 'js']);
 gulp.task('dev', ['build', 'watch']);
 gulp.task('prod', ['build', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
