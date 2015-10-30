@@ -34,7 +34,6 @@ gulp.task('html', function(){
 
 gulp.task('jade', function(){
 	return gulp.src(srcPath + '**/*.jade')
-		.pipe(cache())
 		.pipe(jade())
 		.pipe(gulp.dest(buildPath))
 	;
@@ -56,7 +55,6 @@ gulp.task('csso', function(){
 
 gulp.task('css', function(){
 	return gulp.src(srcPath + '**/*.css')
-		.pipe(cache()) // filters out unchanged files
 		.pipe(sourcemap.init())
 		.pipe(prefixer())
 		.pipe(sourcemap.write())
@@ -66,9 +64,8 @@ gulp.task('css', function(){
 
 gulp.task('stylus', function(){
 	return gulp.src(srcPath + '**/*.styl')
-		.pipe(cache()) // filters out unchanged files
 		.pipe(sourcemap.init())
-		.pipe(stylus())
+		.pipe(stylus({'include css':true, 'include':['node_modules', 'node_modules/*']}))
 		.pipe(prefixer())
 		.pipe(sourcemap.write())
 		.pipe(gulp.dest(buildPath))
@@ -123,7 +120,7 @@ gulp.task('watch', function(){
     });
 });
 
-gulp.task('build', ['lint', 'html', 'jade', 'css', 'js']);
+gulp.task('build', ['lint', 'html', 'jade', 'css', 'stylus', 'js']);
 gulp.task('dev', ['build', 'watch']);
 gulp.task('prod', ['build', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
