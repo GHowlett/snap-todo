@@ -18,7 +18,7 @@ var srcPath = "src/";
 var buildPath = "www/";
 
 gulp.task('lint', function(){
-	return gulp.src(srcPath + 'js/**/*.js')
+	return gulp.src(srcPath + '**/*.js')
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
 	;
@@ -41,14 +41,14 @@ gulp.task('jade', function(){
 });
 
 gulp.task('uglify', function(){
-	return gulp.src(buildPath + 'js/**/*.js')
+	return gulp.src(buildPath + '**/*.js')
 		.pipe(gulp.dest(buildPath + 'js'))
 		.pipe(uglify())
 	;
 });
 
 gulp.task('csso', function(){
-	return gulp.src(buildPath + 'css/**/*.css')
+	return gulp.src(buildPath + '**/*.css')
 		.pipe(gulp.dest(buildPath + 'css'))
 		.pipe(csso())
 	;
@@ -110,13 +110,13 @@ gulp.task('watch', function(){
 	// incrementally rebuilds bundle
     bundler = watchify(bundler, {poll:true}); // poll required for OSX (https://github.com/substack/watchify#rebuilds-on-os-x-never-trigger)
 
-    gulp.watch([srcPath + 'js/**/*.js'], ['lint','js']);
-    gulp.watch([srcPath + 'css/**/*.styl'], ['stylus']);
-    gulp.watch([srcPath + 'css/**/*.css'], ['css']);
-    gulp.watch([srcPath + '**/*.html'], ['html']);
-    gulp.watch([srcPath + '**/*.jade'], ['jade']);
+    gulp.watch(srcPath + '**/*.js', ['lint','js']);
+    gulp.watch(srcPath + '**/*.styl', ['stylus']);
+    gulp.watch(srcPath + '**/*.css', ['css']);
+    gulp.watch(srcPath + '**/*.html', ['html']);
+    gulp.watch(srcPath + '**/*.jade', ['jade']);
 
-    gulp.watch([buildPath + '**/*'], function(){
+    gulp.watch(buildPath + '**/*', function(){
     	gulp.src(buildPath + '**/*.*')
     		.pipe(cache())
     		.pipe(browserSync.stream())
