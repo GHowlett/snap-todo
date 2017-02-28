@@ -1,0 +1,13 @@
+//- link(type='text/css' rel='stylesheet' href='css/todo-app.css')
+
+.todo-app(ng-controller='todoCtrl')
+	h1 TODO: 
+	ul
+		li(ng-repeat='todo in todos | incompleteFirst')
+			input(type='checkbox' ng-model='todo.done')
+			label(ng-class='{done : todo.done}') {{ todo.text }}
+		input(
+			type='text' placeholder='Add todos here!' 
+			ng-model='todoText' enter='addTodo(todoText)')
+
+//- script(type='text/javascript' src='js/todo-app.js')

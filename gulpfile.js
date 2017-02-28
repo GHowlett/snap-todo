@@ -56,7 +56,7 @@ gulp.task('csso', function(){
 gulp.task('css', function(){
 	return gulp.src(srcPath + '**/*.css')
 		.pipe(sourcemap.init())
-		.pipe(prefixer())
+		// .pipe(prefixer()) // breaks sourcemaps
 		.pipe(sourcemap.write())
 		.pipe(gulp.dest(buildPath))
 	;
@@ -66,14 +66,14 @@ gulp.task('stylus', function(){
 	return gulp.src(srcPath + '**/*.styl')
 		.pipe(sourcemap.init())
 		.pipe(stylus({'include css':true, 'include':['node_modules', 'node_modules/*']}))
-		.pipe(prefixer())
+		// .pipe(prefixer()) // breaks sourcemaps
 		.pipe(sourcemap.write())
 		.pipe(gulp.dest(buildPath))
 	;
 });
 
 var bundler = browserify({
-	entries: srcPath + 'js/script.js',
+	entries: srcPath + 'js/index.js',
 	debug: true, // generates sourcemaps
 	cache: {}, // watchify arg
 	packageCache: {} // watchify arg
@@ -81,7 +81,7 @@ var bundler = browserify({
 
 gulp.task('js', function(){
 	return bundler.bundle()
-		.pipe(source('js/script.js')) // transforms to a vinyl stream (what gulp expects)
+		.pipe(source('js/index.js')) // transforms to a vinyl stream (what gulp expects)
 		.pipe(buffer()) // transforms to a vinyl buffer (what sourcemap expects)
 		.pipe(sourcemap.init({loadMaps:true}))
 		.pipe(sourcemap.write())
@@ -101,7 +101,8 @@ gulp.task('watch', function(){
 	browserSync.init({
         proxy: 'http://localhost:3000',
         open: false,
-        port: 5000
+        port: 5000,
+        timestamps: false, // allows chrome to write back changes from inspector
     });
 
 	// incrementally rebuilds bundle
