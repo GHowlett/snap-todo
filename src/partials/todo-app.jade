@@ -1,7 +1,12 @@
 //- link(type='text/css' rel='stylesheet' href='css/todo-app.css')
 
 .todo-app(ng-controller='todoCtrl')
-	h1 TODO: 
+	.intro
+		h1: img(src='img/oh-snap.png')
+		h2 
+			span you have 
+			span.todo-count {{todos.length}} 
+			span todos!
 	ul
 		li(ng-repeat='todo in todos | incompleteFirst')
 			input(type='checkbox' ng-model='todo.done')
