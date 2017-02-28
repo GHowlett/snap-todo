@@ -6,7 +6,7 @@
 		h2 
 			span you have 
 			span.todo-count {{todos.length}} 
-			span  todos !
+			span  todos left to complete !
 	ul
 		li(ng-repeat='todo in todos | incompleteFirst' class='todo')
 			input(type='checkbox' ng-model='todo.done')

@@ -14,6 +14,7 @@ var watchify = require('watchify');
 var jade = require('gulp-jade');
 var stylus = require('gulp-stylus');
 
+var assetPath = "assets/";
 var srcPath = "src/";
 var buildPath = "www/";
 
@@ -21,6 +22,15 @@ gulp.task('lint', function(){
 	return gulp.src(srcPath + '**/*.js')
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
+	;
+});
+
+// copies creative assets
+gulp.task('img', function(){
+	// TODO: imageoptim
+	return gulp.src(assetPath + '**/*.png')
+		.pipe(cache()) // filters out unchanged files
+		.pipe(gulp.dest(buildPath + 'img'))
 	;
 });
 
@@ -121,7 +131,7 @@ gulp.task('watch', function(){
     });
 });
 
-gulp.task('build', ['lint', 'html', 'jade', 'css', 'stylus', 'js']);
+gulp.task('build', ['lint', 'html', 'jade', 'css', 'stylus', 'js', 'img']);
 gulp.task('dev', ['build', 'watch']);
 gulp.task('prod', ['build', 'csso', 'uglify']);
 gulp.task('default', ['prod']);
