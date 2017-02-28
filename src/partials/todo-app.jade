@@ -13,7 +13,7 @@
 			label(ng-class='{done : todo.done}')
 				input(type='checkbox' ng-model='todo.done')
 				span {{ todo.text }}
-		input(
+		li.todo.placeholder: input(
 			type='text' placeholder='Add todos here!' 
 			ng-model='todoText' enter='addTodo(todoText)')
 

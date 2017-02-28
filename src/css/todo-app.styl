@@ -87,13 +87,25 @@ bck-color = #00688b;
 			height: 3em;
 			background: url(../img/snap-logo-unchecked.png);
 			background-size: 100%;
-			opacity: 0.5;
+			opacity: 1;
 			
 		label.done::before
 			background: url(../img/snap-logo-checked.png);
 			background-size: 100%;
 			opacity: 0.5;
 			
+	.todo.placeholder input
+		background: transparent;
+		border: transparent;
+		font-size: 100%;
+		display: table-cell;
+		vertical-align: middle;
+		height: 3em;
+		opacity: 0.5;
+		text-shadow: 1px 1px rgba(255,255,255,0.7);
+	.todo.placeholder input:focus
+		border: 0;
+		outline: none;	
 		
 	ul	
 		padding-left: 0;
