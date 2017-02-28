@@ -1,34 +1,41 @@
 {
-  "name": "angular-todo",
+  "name": "snap-todo",
   "version": "0.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "gulp"
+    "build": "gulp",
+    "postinstall": "gulp build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.3",
-    "angular": "^1.4.7"
-  },
-  "devDependencies": {
+    "angular": "^1.4.7",
+
     "gulp": "^3.9.0",
+    "vinyl-buffer": "^1.0.0",
     "gulp-jshint": "^1.11.2",
     "gulp-uglify": "^1.4.2",
     "gulp-csso": "^1.0.1",
     "browser-sync": "^2.9.11",
     "gulp-nodemon": "^2.0.4",
+    "watchify": "^3.5.0",
     "gulp-cached": "^1.1.0",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-sourcemaps": "^1.6.0",
     "vinyl-source-stream": "^1.1.0",
     "browserify": "^12.0.0",
-    "vinyl-buffer": "^1.0.0",
-    "watchify": "^3.5.0",
     "gulp-jade": "^1.1.0",
     "gulp-stylus": "^2.1.0",
     "jeet": "^6.1.2"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": "6.9.5",
+    "npm": "3.10.10"
   }
 }
