@@ -1,10 +1,11 @@
 var angular = require('angular');
+require('angular-animate');
 
-angular.module('todoApp',[])
+angular.module('todoApp',['ngAnimate'])
 	.controller('todoCtrl', function($scope, incompleteFirstFilter){
 		$scope.todos = [
 			{text: 'Fund an awesome soccer team', done:false},
-			{text: 'Raise more money than you thought possible', done:true},
+			{text: 'Raise more money than you thought possible', done:false},
 			{text: 'Invest in your local community', done:true}
 		];
 
@@ -22,6 +23,14 @@ angular.module('todoApp',[])
 				if ($scope.todos[i] === todo)
 					$scope.todos.splice(i,1);
 		};
+
+		$scope.todoCount = function() {
+			var count = 0;
+			$scope.todos.forEach(function(todo){
+				if (!todo.done) count++;
+			});
+			return count;
+		}
 
 		$scope.filteredTodos = incompleteFirstFilter($scope.todos);
 	})

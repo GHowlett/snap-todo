@@ -5,8 +5,10 @@
 		h1: img(src='img/oh-snap.png')
 		h2 
 			span you have 
-			span.todo-count {{todos.length}} 
-			span  todos left to complete !
+			span.todo-count {{todoCount()}} 
+			span  todo
+			span(ng-show="todoCount() != 1") s
+			span  left to complete !
 	.gradient-bar
 	ul
 		li(ng-repeat='todo in todos | incompleteFirst' class='todo')
