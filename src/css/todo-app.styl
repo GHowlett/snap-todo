@@ -58,13 +58,14 @@ bck-color = #00688b;
 		outline: 0;
 		border: 0;
 		border-radius: 3px;
-		padding-right: 5px;
+		padding-right: 2.5em;
 		padding-left: 5em;
 		font-size: 16pt;
 		// line-height: 3em;
 		min-height: 3em;
 		vertical-align: middle;
 		
+		cursor: pointer;
 		list-style: none;
 		font-family: "GillSansMTStd-Book", "Helvetica Neue", Arial, Helvetica, sans-serif;
 		color: #00688b;
@@ -77,6 +78,7 @@ bck-color = #00688b;
 			display: table-cell;
 			vertical-align: middle;
 			height: 3em;
+			
 			
 		label.done
 			opacity: 0.3;
@@ -92,11 +94,33 @@ bck-color = #00688b;
 			background: url(../img/snap-logo-unchecked.png);
 			background-size: 100%;
 			opacity: 1;
+			cursor: pointer;
+			
+		label.done:hover
+			opacity: 0.5;
+			
+		label:not(.done):hover
+			opacity: 0.8;
+			// left: 1.1em;
 			
 		label.done::before
 			background: url(../img/snap-logo-checked.png);
 			background-size: 100%;
 			opacity: 0.5;
+			
+		.delete
+			position: absolute;
+			right: 0.3em;
+			top: 0;
+			bottom: 0;
+			vertical-align: middle;
+			font-family: "Noteworthy", "OCR A Std", "Myriad"
+			font-size: 2.5em;
+			line-height: 1em;
+			color: darkred;
+			
+		.delete:hover
+			opacity: 0.6;
 			
 	.todo.placeholder input
 		background: transparent;

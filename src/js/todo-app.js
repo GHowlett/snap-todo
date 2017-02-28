@@ -17,6 +17,12 @@ angular.module('todoApp',[])
 			$scope.todoText = '';
 		};
 
+		$scope.deleteTodo = function(todo) {
+			for (var i = 0; i < $scope.todos.length; i++)
+				if ($scope.todos[i] === todo)
+					$scope.todos.splice(i,1);
+		};
+
 		$scope.filteredTodos = incompleteFirstFilter($scope.todos);
 	})
 	.directive('enter', function(){
@@ -38,7 +44,7 @@ angular.module('todoApp',[])
 			for (var i = 0; todos && i< todos.length; i++)
 				if (todos[i].done) complete.push(todos[i]);
 				else incomplete.unshift(todos[i]); // put newly completed todos at bottom
-			console.log(complete, incomplete);
+			// console.log(complete, incomplete);
 			return incomplete.concat(complete);
 		};
 	})
