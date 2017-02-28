@@ -1,0 +1,21 @@
+// @require 'dependency.styl'
+@require 'jeet/stylus/jeet'
+
+.todo-app
+	h1
+		text-align: center;
+
+	div
+		position: relative;
+
+	.done
+		text-decoration: line-through;
+
+	li
+		list-style: none;
+		border: 1px solid black;
+		&:not(:first-child)
+			border-top: 0;
+		
+	ul	
+		padding-left: 0;

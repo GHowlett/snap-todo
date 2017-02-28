@@ -2,10 +2,19 @@ doctype html
 html
 	head
 		title Angular Todo
+
+		//- TODO: 
+		//- * Put each partial in it's own dir with js/css
+		//- * Make a js bundle for each page
 		
-		link(type='text/css' rel='stylesheet' href='css/style.css')
+		link(type='text/css' rel='stylesheet' href='css/index.css')
+		block head
 
-	body
-		h1 TODO:
+	body:.body-inner
+			header
+			.app(ng-app='todoApp')
+				include partials/todo-app.jade
+			footer
 
-	script(type='text/javascript' src='js/script.js')
+	block scripts
+		script(type='text/javascript' src='js/index.js')
