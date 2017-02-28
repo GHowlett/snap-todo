@@ -3,7 +3,8 @@ var angular = require('angular');
 angular.module('todoApp',[])
 	.controller('todoCtrl', function($scope, incompleteFirstFilter){
 		$scope.todos = [
-			{text: 'Fund your son\'s soccer team', done:false},
+			{text: 'Fund an awesome soccer team', done:false},
+			{text: 'Raise more money than you thought possible', done:true},
 			{text: 'Invest in your local community', done:true}
 		];
 
