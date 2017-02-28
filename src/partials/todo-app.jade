@@ -9,8 +9,10 @@
 			span  todos left to complete !
 	ul
 		li(ng-repeat='todo in todos | incompleteFirst' class='todo')
-			input(type='checkbox' ng-model='todo.done')
-			label(ng-class='{done : todo.done}') {{ todo.text }}
+			
+			label(ng-class='{done : todo.done}')
+				input(type='checkbox' ng-model='todo.done')
+				span {{ todo.text }}
 		input(
 			type='text' placeholder='Add todos here!' 
 			ng-model='todoText' enter='addTodo(todoText)')

@@ -123,6 +123,7 @@ gulp.task('watch', function(){
     gulp.watch(srcPath + '**/*.css', ['css']);
     gulp.watch(srcPath + '**/*.html', ['html']);
     gulp.watch(srcPath + '**/*.jade', ['jade']);
+    gulp.watch(assetPath + '**/*.png', ['img']);
 
     gulp.watch(buildPath + '**/*', function(){
     	gulp.src(buildPath + '**/*.*')
